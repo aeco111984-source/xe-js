@@ -63,7 +63,7 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Fetch from Frankfurter API (stable from Vercel)
+  // ✅ Stable Frankfurter API (works globally on Vercel)
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
@@ -178,18 +178,32 @@ export default function Converter() {
           </button>
         </div>
 
-        {/* Result display */}
-        <div className="mt-4 card bg-gray-50">
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+        {/* 🎨 Upgraded Result Display */}
+        <div className="mt-6 card bg-white shadow-sm border border-gray-200 text-center p-5 rounded-xl transition-all">
+          {error && (
+            <div className="text-red-500 text-base font-medium">{error}</div>
+          )}
+
           {!error && rate && (
             <>
-              <div className="text-sm opacity-70">Result</div>
-              <div className="text-xl font-semibold mt-1">
-                {amount} {from} = {converted?.toFixed(4)} {to}
+              <div className="text-sm uppercase tracking-wide text-gray-500 mb-2">
+                Result
               </div>
-              <div className="text-xs opacity-60 mt-1">
-                Rate: {rate.toFixed(6)} • Updated{" "}
-                {timestamp ? timestamp.toLocaleTimeString() : ""}
+
+              <div
+                className="text-3xl sm:text-4xl font-bold mb-1"
+                style={{ color: "var(--brand,#FF7A00)" }}
+              >
+                {amount} {from}
+                <span className="text-gray-700 font-normal mx-1">=</span>
+                {converted?.toFixed(4)} {to}
+              </div>
+
+              <div className="text-sm text-gray-500 mt-2">
+                <span className="font-semibold text-[var(--brand,#FF7A00)]">
+                  Rate: {rate.toFixed(6)}
+                </span>{" "}
+                • Updated {timestamp ? timestamp.toLocaleTimeString() : ""}
               </div>
             </>
           )}
