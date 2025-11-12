@@ -63,7 +63,7 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Fetch from exchangerate.host /latest (stable + consistent with charts)
+  // ✅ Fetch from Frankfurter API (stable from Vercel)
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
@@ -72,16 +72,14 @@ export default function Converter() {
       if (typeof window === "undefined") return;
 
       const res = await fetch(
-        `https://api.exchangerate.host/latest?base=${encodeURIComponent(
+        `https://api.frankfurter.app/latest?amount=1&from=${encodeURIComponent(
           base
-        )}&symbols=${encodeURIComponent(sym)}`
+        )}&to=${encodeURIComponent(sym)}`
       );
 
       if (!res.ok) throw new Error("Network error");
 
       const data = await res.json();
-      console.log("API response:", data);
-
       if (!data?.rates?.[sym]) {
         throw new Error("Invalid or missing conversion result");
       }
