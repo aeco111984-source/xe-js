@@ -63,19 +63,18 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Fixed browser-safe API fetch (fully working)
+  // ✅ Fetch from exchangerate.host /latest (stable + consistent with charts)
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
       setError("");
 
-      // Ensure client-side execution
       if (typeof window === "undefined") return;
 
       const res = await fetch(
-        `https://api.exchangerate.host/convert?from=${encodeURIComponent(
+        `https://api.exchangerate.host/latest?base=${encodeURIComponent(
           base
-        )}&to=${encodeURIComponent(sym)}`
+        )}&symbols=${encodeURIComponent(sym)}`
       );
 
       if (!res.ok) throw new Error("Network error");
@@ -83,12 +82,11 @@ export default function Converter() {
       const data = await res.json();
       console.log("API response:", data);
 
-      // Validate API response
-      if (!data || typeof data.result !== "number") {
+      if (!data?.rates?.[sym]) {
         throw new Error("Invalid or missing conversion result");
       }
 
-      const rateValue = data.result;
+      const rateValue = data.rates[sym];
       const convertedValue = amount * rateValue;
 
       setRate(rateValue);
@@ -96,7 +94,7 @@ export default function Converter() {
       setTimestamp(new Date());
     } catch (err) {
       console.error("Conversion error:", err);
-      setError("Conversion failed. Please try again later.");
+      setError("Could not fetch rate. Try again later.");
       setRate(null);
       setConverted(null);
     } finally {
@@ -104,14 +102,12 @@ export default function Converter() {
     }
   }
 
-  // 🔄 Swap currencies
   function swapCurrencies() {
     const oldFrom = from;
     setFrom(to);
     setTo(oldFrom);
   }
 
-  // Fetch rates automatically when currencies change
   useEffect(() => {
     fetchRate(from, to);
   }, [from, to]);
