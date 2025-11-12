@@ -1,0 +1,64 @@
+{
+  "default": {
+    "title": "XE-Lite",
+    "primaryColor": "#FF7A00",
+    "defaultPair": [
+      "EUR",
+      "USD"
+    ],
+    "region": "Europe",
+    "features": {
+      "calendar": true,
+      "infographics": false,
+      "widgets": true,
+      "news": true
+    }
+  },
+  "sites": {
+    "forexrate.ai": {
+      "title": "ForexRate",
+      "primaryColor": "#FF7A00",
+      "defaultPair": [
+        "EUR",
+        "USD"
+      ],
+      "region": "Europe",
+      "features": {
+        "calendar": true,
+        "infographics": true,
+        "widgets": true,
+        "news": true
+      }
+    },
+    "usdjpy.ai": {
+      "title": "USD/JPY Live",
+      "primaryColor": "#0EA5E9",
+      "defaultPair": [
+        "USD",
+        "JPY"
+      ],
+      "region": "SouthAsia",
+      "features": {
+        "calendar": true,
+        "infographics": false,
+        "widgets": true,
+        "news": true
+      }
+    },
+    "buyfx.ai": {
+      "title": "Buy FX",
+      "primaryColor": "#06B6D4",
+      "defaultPair": [
+        "GBP",
+        "USD"
+      ],
+      "region": "Europe",
+      "features": {
+        "calendar": true,
+        "infographics": false,
+        "widgets": true,
+        "news": false
+      }
+    }
+  }
+}
