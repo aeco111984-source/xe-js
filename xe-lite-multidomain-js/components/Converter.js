@@ -63,17 +63,27 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // ✅ Fixed browser-safe API fetch
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
       setError("");
+
+      // Avoid SSR calls on Vercel build
+      if (typeof window === "undefined") return;
+
       const res = await fetch(
         `https://api.exchangerate.host/convert?from=${encodeURIComponent(
           base
         )}&to=${encodeURIComponent(sym)}`
       );
+
+      if (!res.ok) throw new Error("Network response not ok");
+
       const data = await res.json();
-      if (!data.result) throw new Error("No rate");
+      if (!data || data.result === undefined)
+        throw new Error("No rate found");
+
       setRate(data.result);
       setConverted(amount * data.result);
       setTimestamp(new Date());
@@ -87,6 +97,7 @@ export default function Converter() {
     }
   }
 
+  // 🔄 Swap currencies
   function swapCurrencies() {
     const oldFrom = from;
     setFrom(to);
