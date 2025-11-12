@@ -6,30 +6,30 @@ const regionPairs = {
     { f: "USD", t: "INR" },
     { f: "USD", t: "PKR" },
     { f: "USD", t: "BDT" },
-    { f: "PKR", t: "INR" }
+    { f: "PKR", t: "INR" },
   ],
   SoutheastAsia: [
     { f: "USD", t: "PHP" },
     { f: "USD", t: "VND" },
     { f: "USD", t: "MYR" },
-    { f: "USD", t: "IDR" }
+    { f: "USD", t: "IDR" },
   ],
   LatinAmerica: [
     { f: "USD", t: "MXN" },
     { f: "USD", t: "COP" },
-    { f: "USD", t: "BRL" }
+    { f: "USD", t: "BRL" },
   ],
   Europe: [
     { f: "EUR", t: "PLN" },
     { f: "EUR", t: "RON" },
     { f: "EUR", t: "HUF" },
-    { f: "GBP", t: "EUR" }
+    { f: "GBP", t: "EUR" },
   ],
   MEA: [
     { f: "USD", t: "EGP" },
     { f: "USD", t: "GHS" },
-    { f: "USD", t: "NGN" }
-  ]
+    { f: "USD", t: "NGN" },
+  ],
 };
 
 const majors = [
@@ -38,7 +38,7 @@ const majors = [
   { f: "USD", t: "JPY" },
   { f: "AUD", t: "USD" },
   { f: "USD", t: "CAD" },
-  { f: "USD", t: "CHF" }
+  { f: "USD", t: "CHF" },
 ];
 
 function guessHomeCurrency(region) {
@@ -63,13 +63,13 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Fixed browser-safe API fetch
+  // ✅ Fixed browser-safe API fetch (fully working)
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
       setError("");
 
-      // Avoid SSR calls on Vercel build
+      // Ensure client-side execution
       if (typeof window === "undefined") return;
 
       const res = await fetch(
@@ -78,18 +78,25 @@ export default function Converter() {
         )}&to=${encodeURIComponent(sym)}`
       );
 
-      if (!res.ok) throw new Error("Network response not ok");
+      if (!res.ok) throw new Error("Network error");
 
       const data = await res.json();
-      if (!data || data.result === undefined)
-        throw new Error("No rate found");
+      console.log("API response:", data);
 
-      setRate(data.result);
-      setConverted(amount * data.result);
+      // Validate API response
+      if (!data || typeof data.result !== "number") {
+        throw new Error("Invalid or missing conversion result");
+      }
+
+      const rateValue = data.result;
+      const convertedValue = amount * rateValue;
+
+      setRate(rateValue);
+      setConverted(convertedValue);
       setTimestamp(new Date());
-    } catch (e) {
-      console.error(e);
-      setError("Could not fetch rate. Try again later.");
+    } catch (err) {
+      console.error("Conversion error:", err);
+      setError("Conversion failed. Please try again later.");
       setRate(null);
       setConverted(null);
     } finally {
@@ -104,6 +111,7 @@ export default function Converter() {
     setTo(oldFrom);
   }
 
+  // Fetch rates automatically when currencies change
   useEffect(() => {
     fetchRate(from, to);
   }, [from, to]);
