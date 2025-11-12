@@ -63,7 +63,7 @@ export default function Converter() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Stable Frankfurter API (works globally on Vercel)
+  // ✅ Stable Frankfurter API
   async function fetchRate(base, sym) {
     try {
       setLoading(true);
@@ -116,40 +116,44 @@ export default function Converter() {
     <div className="grid md:grid-cols-3 gap-4">
       <div className="card md:col-span-2">
         <h1
-          className="text-2xl font-semibold mb-2"
+          className="text-[1.75rem] font-semibold mb-3"
           style={{ color: "var(--brand,#FF7A00)" }}
         >
           Currency Converter
         </h1>
 
         {/* Amount / From / To with Swap */}
-        <div className="grid sm:grid-cols-3 gap-3 items-end">
+        <div className="grid sm:grid-cols-3 gap-4 items-end">
           <div>
-            <label className="block text-sm mb-1">Amount</label>
+            <label className="block text-[1rem] mb-2 font-medium text-gray-700">
+              Amount
+            </label>
             <input
               type="number"
               min="0"
-              className="w-full border rounded-md px-3 py-2"
+              className="w-full border rounded-md px-4 py-3 text-[1.05rem]"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value) || 0)}
             />
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <div className="flex-1">
-                <label className="block text-sm mb-1">From</label>
+                <label className="block text-[1rem] mb-2 font-medium text-gray-700">
+                  From
+                </label>
                 <input
                   value={from}
                   onChange={(e) => setFrom(e.target.value.toUpperCase())}
-                  className="w-full border rounded-md px-3 py-2"
+                  className="w-full border rounded-md px-4 py-3 text-[1.05rem]"
                 />
               </div>
 
-              <div className="flex flex-col justify-center items-center mt-5">
+              <div className="flex flex-col justify-center items-center mt-6">
                 <button
                   onClick={swapCurrencies}
-                  className="px-3 py-2 bg-[var(--brand,#FF7A00)] text-white rounded-md hover:opacity-90 text-sm font-medium flex items-center justify-center gap-1"
+                  className="px-4 py-3 bg-[var(--brand,#FF7A00)] text-white rounded-md hover:opacity-90 text-[1rem] font-semibold flex items-center justify-center gap-1 shadow-sm"
                   title="Swap currencies"
                 >
                   🔄 Swap
@@ -157,20 +161,22 @@ export default function Converter() {
               </div>
 
               <div className="flex-1">
-                <label className="block text-sm mb-1">To</label>
+                <label className="block text-[1rem] mb-2 font-medium text-gray-700">
+                  To
+                </label>
                 <input
                   value={to}
                   onChange={(e) => setTo(e.target.value.toUpperCase())}
-                  className="w-full border rounded-md px-3 py-2"
+                  className="w-full border rounded-md px-4 py-3 text-[1.05rem]"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <button
-            className="btn"
+            className="btn text-[1.05rem] px-6 py-3"
             onClick={() => fetchRate(from, to)}
             disabled={loading}
           >
@@ -178,20 +184,22 @@ export default function Converter() {
           </button>
         </div>
 
-        {/* 🎨 Upgraded Result Display */}
-        <div className="mt-6 card bg-white shadow-sm border border-gray-200 text-center p-5 rounded-xl transition-all">
+        {/* 🎨 Result Display */}
+        <div className="mt-8 card bg-white shadow-sm border border-gray-200 text-center p-6 rounded-xl transition-all">
           {error && (
-            <div className="text-red-500 text-base font-medium">{error}</div>
+            <div className="text-red-500 text-[1.1rem] font-medium">
+              {error}
+            </div>
           )}
 
           {!error && rate && (
             <>
-              <div className="text-sm uppercase tracking-wide text-gray-500 mb-2">
+              <div className="text-[1rem] uppercase tracking-wide text-gray-500 mb-3 font-semibold">
                 Result
               </div>
 
               <div
-                className="text-3xl sm:text-4xl font-bold mb-1"
+                className="text-3xl sm:text-4xl font-bold mb-2"
                 style={{ color: "var(--brand,#FF7A00)" }}
               >
                 {amount} {from}
@@ -199,7 +207,7 @@ export default function Converter() {
                 {converted?.toFixed(4)} {to}
               </div>
 
-              <div className="text-sm text-gray-500 mt-2">
+              <div className="text-[1rem] text-gray-600 mt-3">
                 <span className="font-semibold text-[var(--brand,#FF7A00)]">
                   Rate: {rate.toFixed(6)}
                 </span>{" "}
@@ -212,14 +220,14 @@ export default function Converter() {
 
       {/* Sidebar */}
       <aside className="card">
-        <h3 className="font-medium mb-2">
+        <h3 className="font-semibold text-[1.1rem] mb-3">
           Popular in {site.region || "Global"}
         </h3>
-        <ul className="space-y-1">
+        <ul className="space-y-2 text-[1.05rem]">
           {regional.map((p, i) => (
             <li key={i}>
               <button
-                className="underline"
+                className="underline hover:text-[var(--brand,#FF7A00)]"
                 onClick={() => {
                   setFrom(p.f);
                   setTo(p.t);
@@ -231,12 +239,14 @@ export default function Converter() {
           ))}
         </ul>
 
-        <h3 className="font-medium mt-4 mb-2">Global Majors</h3>
-        <ul className="space-y-1">
+        <h3 className="font-semibold text-[1.1rem] mt-6 mb-3">
+          Global Majors
+        </h3>
+        <ul className="space-y-2 text-[1.05rem]">
           {majors.map((p, i) => (
             <li key={i}>
               <button
-                className="underline"
+                className="underline hover:text-[var(--brand,#FF7A00)]"
                 onClick={() => {
                   setFrom(p.f);
                   setTo(p.t);
